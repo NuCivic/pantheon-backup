@@ -1,4 +1,5 @@
 # Settings for running PantheonBackup\Sample.php
+# Copy this file to config.yml and change the settings as needed.
 username: 'test@example.com'
 password: 'example'
 download_dir: '/Users/ben/Google Drive/Site Backups/'
