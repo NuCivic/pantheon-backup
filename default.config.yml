@@ -1,0 +1,4 @@
+# Settings for running PantheonBackup\Sample.php
+username: 'test@example.com'
+password: 'example'
+download_dir: '/Users/ben/Google Drive/Site Backups/'
