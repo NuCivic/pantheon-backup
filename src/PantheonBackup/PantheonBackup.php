@@ -22,8 +22,14 @@ class PantheonBackup extends Pantheon {
     parent::__construct($username, $password);
   }
 
+  /**
+   * Start a backup for the given site and environment.
+   *
+   * @param $siteID
+   * @param $env
+   */
   public function createBackup($siteID, $env) {
-
+    DrushWrapper::drush_exec("pantheon-site-make-backup $siteID $env");
   }
 
   /**
