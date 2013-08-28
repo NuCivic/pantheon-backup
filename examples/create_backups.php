@@ -23,8 +23,10 @@ catch (ParseException $e) {
   $backup = new PantheonBackup($pantheon_config['username'], $pantheon_config['password']);
   // For every site
   foreach ($backup->siteUUIDS as $site) {
+    print "\n\nCreating backups for $site:\n";
     // And each environment within each site
     foreach (array('dev', 'live') as $environment) {
+      print "  $environment\n";
       // Download the files, code, and database
       $backup->createBackup($site, $environment);
     }
