@@ -27,7 +27,7 @@ catch (ParseException $e) {
     // And each environment within each site
     foreach (array('dev', 'live') as $environment) {
       print "  $environment\n";
-      // Download the files, code, and database
+      // Create a backup of files, code, database.
       $backup->createBackup($site, $environment);
     }
   }
