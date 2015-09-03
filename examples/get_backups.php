@@ -22,17 +22,10 @@ catch (ParseException $e) {
 {
   $backup = new PantheonBackup($pantheon_config['username'], $pantheon_config['password']);
   // For every site
-  foreach ($backup->siteUUIDS as $site) {
+  foreach ($backup->siteNames as $site) {
     // And each environment within each site
     foreach (array('dev', 'live') as $environment) {
-      // Download the files, code, and database
-      $backups = $backup->getLatestBackupInformation($site, $environment);
-      foreach ($backups as $filename => $backup_info) {
-        var_dump($filename, $backup_info);
-        $backup_url = $backup->getBackupURL($site, $environment, $backup_info[3], $backup_info[2]);
-        var_dump($backup_url);
-        $backup->downloadBackup($pantheon_config['download_dir'] . $filename, $backup_url);
-      }
+      $backup->getBackup($site, $pantheon_config['download_dir'], $environment);
     }
   }
 }

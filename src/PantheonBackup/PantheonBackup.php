@@ -7,7 +7,7 @@
 
 namespace PantheonBackup;
 
-use PantheonBackup\DrushWrapper;
+use PantheonBackup\TerminusWrapper;
 use PantheonBackup\Pantheon;
 
 class PantheonBackup extends Pantheon {
@@ -25,45 +25,45 @@ class PantheonBackup extends Pantheon {
   /**
    * Start a backup for the given site and environment.
    *
-   * @param $siteID
+   * @param $siteName
    * @param $env
    */
-  public function createBackup($siteID, $env) {
-    DrushWrapper::drush_exec("pantheon-site-make-backup $siteID $env");
+  public function createBackup($siteName, $dir, $env = "prod", $element = 'all') {
+    return TerminusWrapper::terminus_exec("site backup create --site=$siteName --env=$env --element=$element --to-direcotry=$dir");
+  }
+
+  /**
+   * Start a backup for the given site and environment.
+   *
+   * @param $siteName
+   * @param $env
+   */
+  public function getBackup($siteName, $dir, $env = "prod", $element = 'all') {
+    TerminusWrapper::terminus_exec("site backup get --site=$siteName --env=$env --element=$element --to-direcotry=$dir --latest");
   }
 
   /**
    * Get information on all available backups for this site and environment.
    *
-   * @param $siteID
+   * @param $siteName
    * @param $environment [dev, test, live]
    *
    * @return array|mixed
    */
-  public function getBackupInformation($siteID, $environment, $type = NULL) {
-    $result = DrushWrapper::drush_exec("pantheon-site-backups $siteID $environment");
-
-    if (!is_null($type)) {
-      foreach ($result as $filename => $data) {
-        if ($data[0] == 'export' || $data[2] != $type) {
-          unset($result[$filename]);
-        }
-      }
-    }
-
-    return $result;
+  public function getBackupInformation($siteName, $env) {
+    return = TerminusWrapper::terminus_exec("site backup list --site=$siteName --env=$env");
   }
 
   /**
    * Get information only on the latest backup for this site and environment.
    *
-   * @param $siteID
+   * @param $siteName
    * @param $environment
    *
    * @return mixed
    */
-  public function getLatestBackupInformation($siteID, $environment, $type = NULL) {
-    $result = $this->getBackupInformation($siteID, $environment, $type);
+  public function getLatestBackupInformation($siteName, $environment, $type = NULL) {
+    $result = $this->getBackupInformation($siteName, $environment, $type);
     if (is_null($type)) {
       return array_slice($result, 0, 3, TRUE);
     }
@@ -75,18 +75,16 @@ class PantheonBackup extends Pantheon {
   /**
    * Get the download URL for a specific backup.
    *
-   * @param $siteID
+   * @param $siteName
    * @param $environment
    * @param $bucket
    * @param $type
    *
    * @return mixed
    */
-  public function getBackupURL($siteID, $environment, $bucket, $type) {
-    $result = DrushWrapper::drush_exec("pantheon-site-get-backup $siteID $environment $bucket $type");
-    return $result['url'];
+  public function getBackupURL($siteName, $environment, $bucket, $type) {
+    return TerminusWrapper::terminus_exec("site backup get --site=$siteName --env=$env --element=$element --latest");
   }
-
 
   /**
    * Download a backup to the specified filename.

@@ -2,7 +2,7 @@
 
 namespace PantheonBackup;
 
-use PantheonBackup\DrushWrapper;
+use PantheonBackup\TerminusWrapper;
 
 class Pantheon {
 
@@ -16,7 +16,7 @@ class Pantheon {
    */
   public function __construct($username, $password) {
     $this->authenticate($username, $password);
-    $this->getSiteUUIDS();
+    $this->getSiteNames();
   }
 
   /**
@@ -26,21 +26,20 @@ class Pantheon {
    * @param $password
    */
   public function authenticate ($username, $password) {
-    DrushWrapper::drush_exec("pantheon-auth $username --password=$password");
+    shell_exec("terminus auth login $username --password='$password'");
   }
 
   /**
-   * Get the site uuids.
+   * Gets site names.
    *
    * @return array
    */
-  public function getSiteUUIDS() {
-    $sites = DrushWrapper::drush_exec("pantheon-sites");
-
-    foreach($sites as $key=>$value) {
-      $this->siteUUIDS[] = $key;
+  public function getSiteNames() {
+    $sites = TerminusWrapper::terminus_exec("sites list");
+    foreach($sites as $key => $site) {
+      $this->siteNames[] = $site->name;
     }
 
-    return $this->siteUUIDS;
+    return $this->siteNames;
   }
 }

@@ -2,15 +2,15 @@
 
 namespace PantheonBackup;
 
-class DrushWrapper {
+class TerminusWrapper {
   /**
    * @param $cmd
    *
    * @return array|mixed
    */
-  public static function drush_exec ($cmd) {
+  public static function terminus_exec ($cmd) {
     if (is_string($cmd)) {
-      $json = shell_exec("drush " . $cmd . " --json");
+      $json = shell_exec("terminus " . $cmd . " --json");
 
       $decoded = json_decode($json);
       if (is_object($decoded)) {
